@@ -27,7 +27,6 @@ const notesTable = SqfEntityTable(
       parentTable: tagTable,
       fieldName: "tag",
     ),
-    SqfEntityField("createdAt", DbType.datetime),
     SqfEntityField("updatedAt", DbType.datetime),
   ],
 );
@@ -37,4 +36,11 @@ const myDbModel = SqfEntityModel(
   modelName: "Notes",
   databaseName: "notes.db",
   databaseTables: [notesTable, tagTable],
+  defaultColumns: [
+    SqfEntityField(
+      "createdAt",
+      DbType.datetime,
+      defaultValue: "DateTime.now()",
+    ),
+  ],
 );
