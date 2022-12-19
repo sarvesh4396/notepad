@@ -14,17 +14,11 @@ class _NotePageState extends State<NotePage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _bodyController = TextEditingController();
 
-  late String _title;
-  late String _body;
-
   @override
   void initState() {
     super.initState();
-    _title = widget.note.title!;
-    _body = widget.note.body!;
-
-    _titleController.text = _title;
-    _bodyController.text = _body;
+    _titleController.text = widget.note.title!;
+    _bodyController.text = widget.note.body!;
   }
 
   @override
@@ -78,7 +72,9 @@ class _NotePageState extends State<NotePage> {
                     children: [
                       Flexible(
                         child: TextFormField(
-                          initialValue: _title != "" ? _title : "Note Title...",
+                          initialValue: _titleController.text != ""
+                              ? _titleController.text
+                              : "Note Title...",
                           onChanged: (value) {
                             setState(
                               () {
@@ -96,8 +92,9 @@ class _NotePageState extends State<NotePage> {
                         flex: 2,
                         child: TextFormField(
                           maxLines: 100,
-                          initialValue:
-                              _body != "" ? _body : "Write your note here...",
+                          initialValue: _bodyController.text != ""
+                              ? _bodyController.text
+                              : "Write your note here...",
                           onChanged: (value) {
                             setState(
                               () {
