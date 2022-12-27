@@ -78,6 +78,7 @@ class _HomePageState extends State<HomePage> {
                   icon: const Icon(Icons.sort),
                   onSelected: (item) {
                     print(item);
+                    setState(() {});
                   },
                   itemBuilder: (BuildContext context) =>
                       <PopupMenuEntry<String>>[
@@ -126,14 +127,13 @@ class _HomePageState extends State<HomePage> {
                             onChanged: (value) async {
                               if (value != null) {
                                 notes = await _notes;
-                                setState(() {
-                                  ascending = "ascending";
-                                  notes = sortNotes(
-                                    notes,
-                                    ascending: ascending == "ascending",
-                                    by: sortBy,
-                                  );
-                                });
+                                ascending = "ascending";
+                                notes = sortNotes(
+                                  notes,
+                                  ascending: ascending == "ascending",
+                                  by: sortBy,
+                                );
+                                setState(() {});
                               }
                             },
                           ),
@@ -146,14 +146,13 @@ class _HomePageState extends State<HomePage> {
                             onChanged: (value) async {
                               if (value != null) {
                                 notes = await _notes;
-                                setState(() {
-                                  ascending = "descending";
-                                  notes = sortNotes(
-                                    notes,
-                                    ascending: ascending == "ascending",
-                                    by: sortBy,
-                                  );
-                                });
+                                ascending = "descending";
+                                notes = sortNotes(
+                                  notes,
+                                  ascending: ascending == "ascending",
+                                  by: sortBy,
+                                );
+                                setState(() {});
                               }
                             },
                           )
@@ -196,7 +195,7 @@ class _HomePageState extends State<HomePage> {
                             PopupMenuItem<Tag>(
                               value: Tag(),
                               child: ListTile(
-                                title: const Text("None"),
+                                title: const Text("All Tags"),
                                 selected: selectedTag?.id == null,
                               ),
                             )
@@ -217,10 +216,15 @@ class _HomePageState extends State<HomePage> {
           builder: (BuildContext context, AsyncSnapshot<List<Note>> snapshot) {
             if (snapshot.hasData) {
               notes = snapshot.data!;
+              notes = sortNotes(
+                notes,
+                ascending: ascending == "ascending",
+                by: sortBy,
+              );
 
               if (selectedTag != null) {
                 notes = notes
-                    .where((element) => element.id == selectedTag!.id)
+                    .where((element) => element.id == selectedTag?.id)
                     .toList();
               }
 
@@ -280,7 +284,7 @@ class _HomePageState extends State<HomePage> {
                                   const Text(""),
                                 Text(
                                   DateFormat("E, MMM d, HH:mm")
-                                      .format(DateTime.now()),
+                                      .format(note.updatedAt!),
                                 ),
                               ],
                             ),
