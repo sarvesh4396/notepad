@@ -1,8 +1,14 @@
 import "package:flutter/material.dart";
+import 'package:notepad/constants/app_strings.dart';
 import "package:notepad/models/note.dart";
+import 'package:notepad/pages/drawer_page.dart';
 import "package:notepad/pages/note_page.dart";
 import "package:intl/intl.dart";
+import 'package:notepad/pages/tag_page.dart';
+import "package:notepad/pages/trash_page.dart";
 import "package:notepad/utils/util.dart";
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,7 +20,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late Future<List<Note>> _notes;
   List<Note> notes = [];
-  List<int> selected = [];
+  late Future<List<Tag>> _tags;
+  Tag? selectedTag;
+  List<Tag> tags = [];
+  List<int> selectedNotes = [];
   String ascending = "ascending";
   String sortBy = "title";
   Map<String, String> sortFields = {
@@ -27,6 +36,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _notes = Note().select().toList();
+    _tags = Tag().select().toList();
   }
 
   @override
@@ -45,14 +55,14 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text("Notes"),
         centerTitle: true,
-        actions: selected.isNotEmpty
+        actions: selectedNotes.isNotEmpty
             ? [
                 IconButton(
                   onPressed: () async {
                     notes = await _notes;
-                    await Note().select().id.inValues(selected).delete();
+                    await Note().select().id.inValues(selectedNotes).delete();
                     notes.removeWhere((element) {
-                      return selected.remove(element.id!);
+                      return selectedNotes.remove(element.id!);
                     });
 
                     setState(() {});
@@ -61,11 +71,14 @@ class _HomePageState extends State<HomePage> {
                 ),
               ]
             : [
+                // TODO:
                 IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
                 PopupMenuButton<String>(
                   tooltip: "Sort",
                   icon: const Icon(Icons.sort),
-                  onSelected: (item) {},
+                  onSelected: (item) {
+                    print(item);
+                  },
                   itemBuilder: (BuildContext context) =>
                       <PopupMenuEntry<String>>[
                     PopupMenuItem(
@@ -149,9 +162,51 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
+
+                FutureBuilder<List<Tag>>(
+                    future: _tags,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<Tag>> snapshot) {
+                      return PopupMenuButton<Tag>(
+                        tooltip: "See by tag",
+                        icon: const Icon(Icons.tag),
+                        onSelected: (tag) async {
+                          if (tag.id == null) {
+                            selectedTag = null;
+                          } else {
+                            selectedTag = tag;
+                          }
+                          setState(() {});
+                        },
+                        itemBuilder: (BuildContext context) {
+                          tags = snapshot.data ?? [];
+
+                          return <PopupMenuEntry<Tag>>[
+                            ...tags
+                                .map(
+                                  (tag) => PopupMenuItem<Tag>(
+                                    value: tag,
+                                    child: ListTile(
+                                      title: Text(tag.tag!),
+                                      selected: selectedTag?.id == tag.id,
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                            PopupMenuItem<Tag>(
+                              value: Tag(),
+                              child: ListTile(
+                                title: const Text("None"),
+                                selected: selectedTag?.id == null,
+                              ),
+                            )
+                          ];
+                        },
+                      );
+                    }),
               ],
       ),
-      drawer: const Drawer(),
+      drawer: const CustomDrawer(),
       body: RefreshIndicator(
         onRefresh: () async {
           notes = await _notes;
@@ -163,6 +218,12 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.hasData) {
               notes = snapshot.data!;
 
+              if (selectedTag != null) {
+                notes = notes
+                    .where((element) => element.id == selectedTag!.id)
+                    .toList();
+              }
+
               return ListView.separated(
                 separatorBuilder: (context, index) {
                   return const Divider(
@@ -173,18 +234,18 @@ class _HomePageState extends State<HomePage> {
                 itemCount: notes.length,
                 itemBuilder: (BuildContext context, int index) {
                   Note note = notes[index];
-                  bool isSelected = selected.contains(note.id!);
+                  bool isSelected = selectedNotes.contains(note.id!);
                   return Column(
                     children: [
                       ListTile(
                         onLongPress: () {
                           setState(() {
                             if (isSelected) {
-                              selected.remove(note.id);
+                              selectedNotes.remove(note.id);
                             } else {
-                              selected.add(note.id!);
+                              selectedNotes.add(note.id!);
                             }
-                            print(selected);
+                            print(selectedNotes);
                           });
                         },
                         onTap: () async {
@@ -251,7 +312,6 @@ class _HomePageState extends State<HomePage> {
                   body: "",
                   title: "",
                   createdAt: DateTime.now(),
-                  updatedAt: DateTime.now(),
                 ),
               ),
             ),
