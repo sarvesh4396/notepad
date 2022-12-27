@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   List<Tag> tags = [];
   List<int> selectedNotes = [];
   String ascending = "ascending";
-  String sortBy = "title";
+  String sortBy = "updatedAt";
   Map<String, String> sortFields = {
     "Title": "title",
     "Created At": "createdAt",
@@ -57,9 +57,51 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         actions: selectedNotes.isNotEmpty
             ? [
+                FutureBuilder<List<Tag>>(
+                    future: _tags,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<Tag>> snapshot) {
+                      return PopupMenuButton<Tag>(
+                        tooltip: "Apply tag",
+                        icon: const Icon(Icons.tag),
+                        onSelected: (tag) async {
+                          for (var note in notes) {
+                            if (selectedNotes.contains(note.id!)) {
+                              note.tag = tag.id;
+
+                              await note.save();
+
+                              selectedNotes.removeWhere((id) {
+                                return id == note.id;
+                              });
+                            }
+                          }
+
+                          notes = await _notes;
+
+                          setState(() {});
+                        },
+                        itemBuilder: (BuildContext context) {
+                          tags = snapshot.data ?? [];
+
+                          return <PopupMenuEntry<Tag>>[
+                            ...tags
+                                .map(
+                                  (tag) => PopupMenuItem<Tag>(
+                                    value: tag,
+                                    child: ListTile(
+                                      title: Text(tag.tag!),
+                                      selected: selectedTag?.id == tag.id,
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ];
+                        },
+                      );
+                    }),
                 IconButton(
                   onPressed: () async {
-                    notes = await _notes;
                     await Note().select().id.inValues(selectedNotes).delete();
                     notes.removeWhere((element) {
                       return selectedNotes.remove(element.id!);
@@ -68,7 +110,7 @@ class _HomePageState extends State<HomePage> {
                     setState(() {});
                   },
                   icon: const Icon(Icons.delete),
-                ),
+                )
               ]
             : [
                 // TODO:
@@ -209,6 +251,7 @@ class _HomePageState extends State<HomePage> {
       body: RefreshIndicator(
         onRefresh: () async {
           notes = await _notes;
+          tags = await _tags;
           setState(() {});
         },
         child: FutureBuilder<List<Note>>(
@@ -249,7 +292,6 @@ class _HomePageState extends State<HomePage> {
                             } else {
                               selectedNotes.add(note.id!);
                             }
-                            print(selectedNotes);
                           });
                         },
                         onTap: () async {
