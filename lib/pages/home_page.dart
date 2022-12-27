@@ -65,17 +65,12 @@ class _HomePageState extends State<HomePage> {
                         tooltip: "Apply tag",
                         icon: const Icon(Icons.tag),
                         onSelected: (tag) async {
-                          for (var note in notes) {
-                            if (selectedNotes.contains(note.id!)) {
-                              note.tag = tag.id;
-
-                              await note.save();
-
-                              selectedNotes.removeWhere((id) {
-                                return id == note.id;
-                              });
-                            }
-                          }
+                          await Note()
+                              .select()
+                              .id
+                              .inValues(selectedNotes)
+                              .update({"tag": tag.id});
+                          selectedNotes = [];
 
                           notes = await _notes;
 

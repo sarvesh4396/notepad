@@ -1,10 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:notepad/constants/app_strings.dart';
-import 'package:notepad/pages/tag_page.dart';
-import 'package:notepad/pages/trash_page.dart';
-import 'package:url_launcher/url_launcher.dart';
+import "package:flutter/material.dart";
+import "package:notepad/constants/app_strings.dart";
+import "package:notepad/pages/tag_page.dart";
+import "package:notepad/pages/trash_page.dart";
+import "package:url_launcher/url_launcher.dart";
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
@@ -39,6 +37,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 1.5,
+                  color: Colors.blue,
                 ),
               ),
             ),
@@ -50,7 +49,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             selected: selected == 0,
-            leading: Icon(Icons.note),
+            leading: Icon(
+              Icons.note,
+              color: Colors.blue,
+            ),
             title: const DrawerText(text: "Notes"),
             dense: true,
             onTap: () {
@@ -60,7 +62,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             selected: selected == 1,
-            leading: const Icon(Icons.delete),
+            leading: const Icon(
+              Icons.delete,
+              color: Colors.blue,
+            ),
             title: const DrawerText(text: "Trash"),
             dense: true,
             onTap: () {
@@ -75,7 +80,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             selected: selected == 2,
-            leading: const Icon(Icons.tag),
+            leading: const Icon(
+              Icons.tag,
+              color: Colors.blue,
+            ),
             title: const DrawerText(text: "Tags"),
             dense: true,
             onTap: () {
@@ -95,7 +103,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             selected: selected == 3,
-            leading: Icon(Icons.local_play),
+            leading: Icon(
+              Icons.local_play,
+              color: Colors.blue,
+            ),
             title: const DrawerText(text: "Rate this App"),
             dense: true,
             onTap: () {
@@ -108,7 +119,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             selected: selected == 4,
-            leading: const Icon(Icons.local_mall),
+            leading: const Icon(
+              Icons.local_mall,
+              color: Colors.blue,
+            ),
             title: const DrawerText(text: "More Apps"),
             dense: true,
             onTap: () {
@@ -121,7 +135,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             selected: selected == 5,
-            leading: const Icon(Icons.description),
+            leading: const Icon(
+              Icons.description,
+              color: Colors.blue,
+            ),
             title: const DrawerText(text: "Privacy Policy"),
             dense: true,
             onTap: () {
