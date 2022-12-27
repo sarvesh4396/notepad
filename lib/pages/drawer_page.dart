@@ -127,10 +127,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
             dense: true,
             onTap: () {
               changeSelected(4);
-              // launchUrl(
-              //   Uri.parse(ConstStrings.publisherUrl),
-              //   mode: LaunchMode.externalApplication,
-              // );
+              launchUrl(
+                Uri.parse(AppStrings.publisherUrl),
+                mode: LaunchMode.externalApplication,
+              );
             },
           ),
           ListTile(
