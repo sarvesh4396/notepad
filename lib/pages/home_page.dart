@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
   Tag? selectedTag;
   List<Tag> tags = [];
   List<int> selectedNotes = [];
-  String ascending = "ascending";
+  bool ascending = true;
   String sortBy = "updatedAt";
   Map<String, String> sortFields = {
     "Title": "title",
@@ -35,8 +35,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _notes = Note().select().toList();
     _tags = Tag().select().toList();
+    _notes = Note().select().toList();
   }
 
   @override
@@ -45,6 +45,12 @@ class _HomePageState extends State<HomePage> {
     Note().select().toList().then((value) => {
           setState(() {
             notes = value;
+          })
+        });
+
+    Tag().select().toList().then((value) => {
+          setState(() {
+            tags = value;
           })
         });
   }
@@ -114,7 +120,6 @@ class _HomePageState extends State<HomePage> {
                   tooltip: "Sort",
                   icon: const Icon(Icons.sort),
                   onSelected: (item) {
-                    print(item);
                     setState(() {});
                   },
                   itemBuilder: (BuildContext context) =>
@@ -130,17 +135,11 @@ class _HomePageState extends State<HomePage> {
                                   value: e,
                                   selected: sortFields[e] == sortBy,
                                   groupValue: "by",
-                                  onChanged: (String? key) async {
+                                  onChanged: (String? key) {
                                     if (key != null) {
-                                      notes = await _notes;
-                                      setState(() {
-                                        sortBy = sortFields[key]!;
-                                        notes = sortNotes(
-                                          notes,
-                                          ascending: ascending == "ascending",
-                                          by: sortBy,
-                                        );
-                                      });
+                                      sortBy = sortFields[key]!;
+
+                                      setState(() {});
                                     }
                                   },
                                 ),
@@ -160,16 +159,10 @@ class _HomePageState extends State<HomePage> {
                             dense: true,
                             value: "ascending",
                             groupValue: "asc",
-                            selected: ascending == "ascending",
+                            selected: ascending,
                             onChanged: (value) async {
                               if (value != null) {
-                                notes = await _notes;
-                                ascending = "ascending";
-                                notes = sortNotes(
-                                  notes,
-                                  ascending: ascending == "ascending",
-                                  by: sortBy,
-                                );
+                                ascending = true;
                                 setState(() {});
                               }
                             },
@@ -179,16 +172,11 @@ class _HomePageState extends State<HomePage> {
                             dense: true,
                             value: "descending",
                             groupValue: "asc",
-                            selected: ascending != "ascending",
+                            selected: !ascending,
                             onChanged: (value) async {
                               if (value != null) {
-                                notes = await _notes;
-                                ascending = "descending";
-                                notes = sortNotes(
-                                  notes,
-                                  ascending: ascending == "ascending",
-                                  by: sortBy,
-                                );
+                                ascending = false;
+
                                 setState(() {});
                               }
                             },
@@ -256,7 +244,7 @@ class _HomePageState extends State<HomePage> {
               notes = snapshot.data!;
               notes = sortNotes(
                 notes,
-                ascending: ascending == "ascending",
+                ascending: ascending,
                 by: sortBy,
               );
 
@@ -312,11 +300,23 @@ class _HomePageState extends State<HomePage> {
                               ),
                               maxLines: 1,
                             ),
+                            SizedBox(
+                              height: 2,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                if (note.tag != null)
-                                  Text("#${note.tag}")
+                                if (note.tag != null &&
+                                    tags
+                                        .where(
+                                            (element) => element.id == note.tag)
+                                        .isNotEmpty)
+                                  Text(
+                                    "#${tags.where((element) => element.id == note.tag).first.tag}",
+                                    style: TextStyle(
+                                        color: Colors.black87,
+                                        fontStyle: FontStyle.italic),
+                                  )
                                 else
                                   const Text(""),
                                 Text(
