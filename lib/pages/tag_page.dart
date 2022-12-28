@@ -9,31 +9,32 @@ class TagsPage extends StatefulWidget {
 }
 
 class _TagsPageState extends State<TagsPage> {
-  late Future<List<Tag>> _tags;
-  List<Tag> tags = [];
+  late Future<List<Tag>> tags;
+
   List<int> selectedTags = [];
   TextEditingController tagController = TextEditingController();
-
-  int selected = -1;
-
-  void changeSelected(int index) {
-    setState(
-      () {
-        selected = index;
-      },
-    );
-  }
 
   @override
   void initState() {
     super.initState();
-    _tags = Tag().select().toList();
+    updateView();
   }
 
   @override
   void dispose() {
     tagController.dispose();
     super.dispose();
+  }
+
+  updateView() async {
+    tags = Tag().select().toList();
+    setState(() {});
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    updateView();
   }
 
   @override
@@ -55,14 +56,13 @@ class _TagsPageState extends State<TagsPage> {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          tags = await _tags;
-          setState(() {});
+          await updateView();
         },
         child: FutureBuilder<List<Tag>>(
-          future: _tags,
+          future: tags,
           builder: (BuildContext context, AsyncSnapshot<List<Tag>> snapshot) {
             if (snapshot.hasData) {
-              tags = snapshot.data!;
+              var data = snapshot.data!;
 
               return ListView.separated(
                 separatorBuilder: (context, index) {
@@ -71,9 +71,9 @@ class _TagsPageState extends State<TagsPage> {
                   );
                 },
                 shrinkWrap: true,
-                itemCount: tags.length,
+                itemCount: data.length,
                 itemBuilder: (BuildContext context, int index) {
-                  Tag tag = tags[index];
+                  Tag tag = data[index];
                   bool isSelected = selectedTags.contains(tag.id!);
                   return Column(
                     children: [
@@ -85,35 +85,32 @@ class _TagsPageState extends State<TagsPage> {
                             } else {
                               selectedTags.add(tag.id!);
                             }
-                          
                           });
                         },
-                        onTap: () async {
-                          tags = await _tags;
-                          setState(() {});
-                        },
+                        onTap: () {},
                         title: Text(
                           tag.tag!,
                         ),
                         trailing: isSelected
-                            ? const Icon(
-                                Icons.check,
-                              )
+                            ? const Icon(Icons.check, color: Colors.blue)
                             : Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
                                     onPressed: () async {
+                                      tagController.text = tag.tag!;
                                       await addTag(context, tag, edit: true);
                                     },
-                                    icon: const Icon(Icons.edit),
+                                    icon: const Icon(Icons.edit,
+                                        color: Colors.blue),
                                   ),
                                   IconButton(
                                     onPressed: () async {
                                       selectedTags.add(tag.id!);
                                       await deleteTags();
                                     },
-                                    icon: const Icon(Icons.delete_forever),
+                                    icon: const Icon(Icons.delete_forever,
+                                        color: Colors.blue),
                                   )
                                 ],
                               ),
@@ -131,9 +128,6 @@ class _TagsPageState extends State<TagsPage> {
         tooltip: "Add Tag",
         onPressed: () async {
           await addTag(context, Tag(tag: tagController.text));
-
-          tags = await _tags;
-          setState(() {});
         },
         child: const Icon(Icons.add),
       ),
@@ -141,13 +135,11 @@ class _TagsPageState extends State<TagsPage> {
   }
 
   Future<void> deleteTags() async {
-    tags = await _tags;
     await Tag().select().id.inValues(selectedTags).delete(true);
-    tags.removeWhere((element) {
-      return selectedTags.remove(element.id!);
-    });
 
-    setState(() {});
+    selectedTags = [];
+
+    await updateView();
   }
 
   addTag(BuildContext context, Tag tag, {bool edit = false}) async {
@@ -171,6 +163,8 @@ class _TagsPageState extends State<TagsPage> {
               onPressed: () async {
                 tag.tag = tagController.text;
                 await tag.save();
+                tagController.text = '';
+                await updateView();
                 Navigator.pop(context);
               },
               child: Text(edit ? "Update" : "Save"),

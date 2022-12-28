@@ -318,9 +318,7 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                         trailing: isSelected
-                            ? const Icon(
-                                Icons.check,
-                              )
+                            ? const Icon(Icons.check, color: Colors.blue)
                             : null,
                       )
                     ],
