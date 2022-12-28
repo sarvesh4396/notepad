@@ -11,46 +11,25 @@ dependencies:
   flutter:
     sdk: flutter
   intl: ^0.17.0
+  share_plus: ^6.3.0
   sqfentity: ^2.3.0+5
   sqfentity_gen: ^2.3.0+4
+  url_launcher: ^6.1.7
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
   build_runner: ^2.3.3
+  flutter_launcher_icons: ^0.11.0
 
+flutter_icons:
+  android: "launcher_icon"
+  ios: false
+  image_path: "assets/logo.png"
 
 flutter:
   uses-material-design: true
 
-  
-  
-  
-  
-
-  
-  
-
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  assets:
+    - assets/
