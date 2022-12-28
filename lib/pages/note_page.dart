@@ -32,7 +32,6 @@ class _NotePageState extends State<NotePage> {
         note.title = _titleController.text;
         note.updatedAt = DateTime.now();
         var i = await note.save();
-        print("Saved $i");
         return i != null;
       },
       child: Scaffold(

@@ -74,8 +74,6 @@ class _TrashPageState extends State<TrashPage> {
           builder: (BuildContext context, AsyncSnapshot<List<Note>> snapshot) {
             if (snapshot.hasData) {
               notes = snapshot.data!;
-              print("got data: ");
-              print(notes);
 
               return ListView.separated(
                 separatorBuilder: (context, index) {
@@ -98,7 +96,6 @@ class _TrashPageState extends State<TrashPage> {
                             } else {
                               selected.add(note.id!);
                             }
-                            print(selected);
                           });
                         },
                         onTap: () async {

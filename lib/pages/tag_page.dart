@@ -85,7 +85,7 @@ class _TagsPageState extends State<TagsPage> {
                             } else {
                               selectedTags.add(tag.id!);
                             }
-                            print(selectedTags);
+                          
                           });
                         },
                         onTap: () async {
