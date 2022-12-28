@@ -102,7 +102,7 @@ class _TagsPageState extends State<TagsPage> {
                                       await addTag(context, tag, edit: true);
                                     },
                                     icon: const Icon(Icons.edit,
-                                        color: Colors.blue),
+                                        color: Colors.blue,),
                                   ),
                                   IconButton(
                                     onPressed: () async {
@@ -110,7 +110,7 @@ class _TagsPageState extends State<TagsPage> {
                                       await deleteTags();
                                     },
                                     icon: const Icon(Icons.delete_forever,
-                                        color: Colors.blue),
+                                        color: Colors.blue,),
                                   )
                                 ],
                               ),
@@ -155,6 +155,7 @@ class _TagsPageState extends State<TagsPage> {
               if (value!.isEmpty) {
                 return "Tag can not be empty";
               }
+              return null;
             },
           ),
           actionsAlignment: MainAxisAlignment.spaceBetween,
@@ -163,7 +164,7 @@ class _TagsPageState extends State<TagsPage> {
               onPressed: () async {
                 tag.tag = tagController.text;
                 await tag.save();
-                tagController.text = '';
+                tagController.text = "";
                 await updateView();
                 Navigator.pop(context);
               },

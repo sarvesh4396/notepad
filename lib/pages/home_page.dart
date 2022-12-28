@@ -1,16 +1,11 @@
-import 'dart:async';
+import "dart:async";
 
 import "package:flutter/material.dart";
-import 'package:notepad/constants/app_strings.dart';
 import "package:notepad/models/note.dart";
-import 'package:notepad/pages/drawer_page.dart';
+import "package:notepad/pages/drawer_page.dart";
 import "package:notepad/pages/note_page.dart";
 import "package:intl/intl.dart";
-import 'package:notepad/pages/tag_page.dart';
-import "package:notepad/pages/trash_page.dart";
 import "package:notepad/utils/util.dart";
-import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -74,7 +69,7 @@ class _HomePageState extends State<HomePage> {
                 FutureBuilder<List<Tag>>(
                     future: tags,
                     builder: (BuildContext context,
-                        AsyncSnapshot<List<Tag>> snapshot) {
+                        AsyncSnapshot<List<Tag>> snapshot,) {
                       return PopupMenuButton<Tag>(
                         tooltip: "Apply tag",
                         icon: const Icon(Icons.tag),
@@ -105,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                           ];
                         },
                       );
-                    }),
+                    },),
                 IconButton(
                   onPressed: () async {
                     await Note().select().id.inValues(selectedNotes).delete();
@@ -192,7 +187,7 @@ class _HomePageState extends State<HomePage> {
                 FutureBuilder<List<Tag>>(
                     future: tags,
                     builder: (BuildContext context,
-                        AsyncSnapshot<List<Tag>> snapshot) {
+                        AsyncSnapshot<List<Tag>> snapshot,) {
                       return PopupMenuButton<Tag>(
                         tooltip: "See by tag",
                         icon: const Icon(Icons.tag),
@@ -227,7 +222,7 @@ class _HomePageState extends State<HomePage> {
                           ];
                         },
                       );
-                    }),
+                    },),
               ],
       ),
       drawer: const CustomDrawer(),
@@ -299,13 +294,13 @@ class _HomePageState extends State<HomePage> {
                                 if (note.tag != null &&
                                     _tags
                                         .where(
-                                            (element) => element.id == note.tag)
+                                            (element) => element.id == note.tag,)
                                         .isNotEmpty)
                                   Text(
                                     "#${_tags.where((element) => element.id == note.tag).first.tag}",
                                     style: const TextStyle(
                                         color: Colors.black87,
-                                        fontStyle: FontStyle.italic),
+                                        fontStyle: FontStyle.italic,),
                                   )
                                 else
                                   const Text(""),

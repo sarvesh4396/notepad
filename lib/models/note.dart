@@ -1,8 +1,7 @@
-import 'dart:convert';
-import 'dart:typed_data';
-import 'package:flutter/material.dart';
-import 'package:sqfentity/sqfentity.dart';
-import 'package:sqfentity_gen/sqfentity_gen.dart';
+import "dart:convert";
+import "package:flutter/material.dart";
+import "package:sqfentity/sqfentity.dart";
+import "package:sqfentity_gen/sqfentity_gen.dart";
 part "note.g.dart";
 
 const tagTable = SqfEntityTable(

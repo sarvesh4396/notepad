@@ -33,7 +33,7 @@ class _TrashPageState extends State<TrashPage> {
               setState(() {
                 notes = value;
               })
-            });
+            },);
   }
 
   @override

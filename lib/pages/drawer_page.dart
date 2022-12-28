@@ -31,7 +31,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             height: 60,
             child: Center(
               child: Text(
-                "NotePad",
+                AppStrings.appName,
                 style: TextStyle(
                   fontSize: 20,
                   fontStyle: FontStyle.italic,
@@ -49,7 +49,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             selected: selected == 0,
-            leading: Icon(
+            leading: const Icon(
               Icons.note,
               color: Colors.blue,
             ),
@@ -103,7 +103,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             selected: selected == 3,
-            leading: Icon(
+            leading: const Icon(
               Icons.local_play,
               color: Colors.blue,
             ),

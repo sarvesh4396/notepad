@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:notepad/constants/app_strings.dart";
 import "package:notepad/pages/home_page.dart";
 
 void main() {
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Simple NotePad",
+      title: AppStrings.appName,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
