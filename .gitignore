@@ -50,3 +50,4 @@ temp/
 **/*.env
 **/*.jks
 **/google-services.json
+**/firebase_options.dart
