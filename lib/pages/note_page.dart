@@ -17,8 +17,16 @@ class _NotePageState extends State<NotePage> {
   @override
   void initState() {
     super.initState();
-    _titleController.text = widget.note.title!;
-    _bodyController.text = widget.note.body!;
+    _titleController.text = widget.note.title ?? "Note Title...";
+    _bodyController.text = widget.note.body ?? "Write your note here...";
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _titleController.dispose();
+    _bodyController.dispose();
   }
 
   @override
@@ -71,16 +79,7 @@ class _NotePageState extends State<NotePage> {
                     children: [
                       Flexible(
                         child: TextFormField(
-                          initialValue: _titleController.text != ""
-                              ? _titleController.text
-                              : "Note Title...",
-                          onChanged: (value) {
-                            setState(
-                              () {
-                                _titleController.text = value;
-                              },
-                            );
-                          },
+                          controller: _titleController,
                           decoration: const InputDecoration(
                             hintText: "My Note Title",
                             label: Text("Title"),
@@ -91,16 +90,7 @@ class _NotePageState extends State<NotePage> {
                         flex: 2,
                         child: TextFormField(
                           maxLines: 100,
-                          initialValue: _bodyController.text != ""
-                              ? _bodyController.text
-                              : "Write your note here...",
-                          onChanged: (value) {
-                            setState(
-                              () {
-                                _bodyController.text = value;
-                              },
-                            );
-                          },
+                          controller: _bodyController,
                           decoration: const InputDecoration(
                             hintText: "My Note",
                             label: Text("Note"),
