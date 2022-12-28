@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.heycoder.notepad">
    <application
-        android:label="notepad"
+        android:label="NotePad"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
