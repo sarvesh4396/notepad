@@ -2,6 +2,10 @@
 
 An open-source simple light-weight notepad.
 
+## Screenshots
+![Frame 60](https://user-images.githubusercontent.com/68162479/210114257-e6f3632a-8173-4aff-8e89-47b7d389e747.png)
+
+
 ## Features
 
 - Add Note
